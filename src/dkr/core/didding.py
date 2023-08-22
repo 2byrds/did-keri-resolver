@@ -17,6 +17,7 @@ DID_RE = re.compile('\\Adid:keri:(?P<aid>[^:]+):(?P<oobi>.+)\\Z', re.IGNORECASE)
 
 
 def parseDID(did):
+    print("Parsing DID", did)
     match = DID_RE.match(did)
     if match is None:
         raise ValueError(f"{did} is not a valid did:keri DID")
@@ -34,6 +35,7 @@ def parseDID(did):
 
 
 def generateDIDDoc(hby, did, aid, oobi=None):
+    print(f"Generating DID doc for did {did} and aid {aid}")
     if oobi is not None:
         obr = hby.db.roobi.get(keys=(oobi,))
         if obr is None or obr.state == oobiing.Result.failed:

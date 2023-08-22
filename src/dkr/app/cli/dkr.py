@@ -15,7 +15,7 @@ from keri import help
 help.ogler.level = logging.CRITICAL
 help.ogler.reopen(name="dkr", temp=True, clear=True)
 
-
+#!/usr/bin/env python3
 def main():
     parser = multicommand.create_parser(commands)
     args = parser.parse_args()

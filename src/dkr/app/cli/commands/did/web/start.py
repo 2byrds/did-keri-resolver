@@ -12,6 +12,7 @@ from hio.core import http
 from keri.app import keeping, configing, habbing, oobiing
 from keri.app.cli.common import existing
 
+from dkr.app import specing
 from dkr.core import webbing
 
 parser = argparse.ArgumentParser(description='Launch web server capable of serving KERI AIDs as did:web DIDs')
@@ -74,6 +75,8 @@ def launch(args):
         hby = habbing.Habery(name=name, base=base, bran=bran, cf=cf)
     else:
         hby = existing.setupHby(name=name, base=base, bran=bran)
+        
+    hby.loadHabs()
 
     hbyDoer = habbing.HaberyDoer(habery=hby)  # setup doer
     obl = oobiing.Oobiery(hby=hby)
@@ -99,6 +102,19 @@ def launch(args):
     doers = obl.doers + [hbyDoer, httpServerDoer]
 
     webbing.setup(app, hby=hby, cf=cf)
+    
+    specing.setup(app, hby=hby)
+    
+    app.add_route('/ping', PingResource())
 
     print(f"did:web Server running on: {httpPort}")
     return doers
+
+class PingResource:
+   def on_get(self, req, resp):
+      """Handles GET requests"""
+      resp.status = falcon.HTTP_200
+      resp.content_type = falcon.MEDIA_TEXT
+      resp.text = (
+         'Pong'
+      )

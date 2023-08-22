@@ -65,12 +65,14 @@ setup(
     ],
     python_requires='>=3.10.4',
     install_requires=[
+        'apispec>=6.3.0',
         'keri>=0.6.8',
         'hio>=0.6.8',
         'multicommand>=1.0.0',
         'blake3>=0.3.1',
         'falcon>=3.1.0',
-        'py-multibase>=1.0.3'
+        'py-multibase>=1.0.3',
+        'swagger-ui-py>=22.7.13'
     ],
     extras_require={
     },

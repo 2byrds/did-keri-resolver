@@ -7,12 +7,13 @@ import json
 import os
 
 import falcon
+from falcon import media
 from hio.core import http
+from keri.app import habbing
 
 from dkr.core import didding
 
-
-def setup(app, hby, cf):
+def setup(app, hby: habbing.Habery, cf):
     """ Set up webbing endpoints to serve configured KERI AIDs as `did:web` DIDs
 
     Parameters:
@@ -31,7 +32,8 @@ def setup(app, hby, cf):
     loadEnds(app, hby, web)
 
 
-def loadEnds(app, hby, web):
+
+def loadEnds(app, hby: habbing.Habery, web):
     """ Load endpoints for all AIDs or configured AIDs only
 
     Parameters:
@@ -60,7 +62,7 @@ def loadEnds(app, hby, web):
 
 class DIDWebResourceEnd:
 
-    def __init__(self, hby):
+    def __init__(self, hby: habbing.Habery):
         """
         Parameters:
             hby (Habery): Database environment for AIDs to expose
@@ -87,7 +89,7 @@ class DIDWebResourceEnd:
 
         # 404 if AID not recognized
         if aid not in self.hby.kevers:
-            raise falcon.HTTPNotFound(description="KERI AID {aid} not found")
+            raise falcon.HTTPNotFound(description=f"KERI AID {aid} not found")
 
         # Create the actual DID from the request info
         path = os.path.normpath(req.path).rstrip("/did.json").replace("/", ":")
