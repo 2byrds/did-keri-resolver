@@ -204,7 +204,7 @@ function updateFromGit() {
 runAnother="y"
 while [ "${runAnother}" != "n" ]
 do
-    touch "${OUTPUT_FILE}"
+    # touch "${OUTPUT_FILE}"
 
     intro
 
