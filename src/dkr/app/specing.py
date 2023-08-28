@@ -41,7 +41,7 @@ def add_swagger(app,hby):
             "tags":[{"name":"default","description":"default tag"}],
             "paths":{"/ping":{"get":{"tags":["default"],"summary":"output pong.","responses":{"200":{"description":"OK","content":{"application/text":{"schema":{"type":"object","example":"Pong"}}}}}}},
                     "/{aid}/did.kel":{"get":{"tags":["default"],
-                                        "summary":"Given an AID returns a KEL",
+                                        "summary":"Given an AID returns a CESR stream of the KEL",
                                         "parameters":[
                                             {"in":"path","name":"aid","required":"true",
                                              "schema":{"type":"string","example":"EBcIURLpxmVwahksgrsGW6_dUw0zBhyEHYFk17eWrZfk"},

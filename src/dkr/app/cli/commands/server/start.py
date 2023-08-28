@@ -16,7 +16,7 @@ parser.set_defaults(handler=lambda args: launch(args),
 parser.add_argument('-p', '--http',
                     action='store',
                     default=7676,
-                    help="Port on which to listen for OOBI requests.  Defaults to 9723")
+                    help="Port on which to listen for OOBI requests.  Defaults to 7676")
 parser.add_argument('-n', '--name',
                     action='store',
                     default="dkr",

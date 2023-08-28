@@ -96,6 +96,9 @@ def launch(args):
     else:
         servant = None
 
+    if type(httpPort) is str:
+        httpPort = int(httpPort)
+        
     server = http.Server(port=httpPort, app=app, servant=servant)
     httpServerDoer = http.ServerDoer(server=server)
 
@@ -107,7 +110,7 @@ def launch(args):
     
     app.add_route('/ping', PingResource())
 
-    print(f"did:web Server running on: {httpPort}")
+    print(f"did:web Server {hby.name} running on {httpPort}")
     return doers
 
 class PingResource:
