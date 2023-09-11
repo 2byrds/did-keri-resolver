@@ -82,7 +82,7 @@ class DIDWebResourceEnd:
         """
         # Read the DID from the parameter extracted from path or manually extract
         if not req.path.endswith("/did.json"):
-            raise falcon.HTTPBadRequest(description=f"invalid did:web DID URL {req.path}")
+            raise falcon.HTTPBadRequest(description=f"invalid did:web(s) DID URL {req.path}")
 
         if aid is None:
             aid = os.path.basename(os.path.normpath(req.path.rstrip("/did.json")))
@@ -106,6 +106,41 @@ class DIDWebResourceEnd:
         rep.content_type = "application/json"
         rep.data = json.dumps(result, indent=2).encode("utf-8")
 
+class KELWebResourceEnd:
 
+    def __init__(self, hby: habbing.Habery):
+        """
+        Parameters:
+            hby (Habery): Database environment for AIDs to expose
+
+        """
+
+        self.hby = hby
+
+    def on_get(self, req, rep, aid=None):
+        """ GET endpoint for resolving KERI AIDs as did:web DIDs
+
+        Parameters:
+            req (Request) Falcon HTTP Request object:
+            rep (Response) Falcon HTTP Response object:
+            aid (str): AID to resolve, or path used if None
+
+        """
+        # Read the DID from the parameter extracted from path or manually extract
+        if not req.path.endswith("/did.kel"):
+            raise falcon.HTTPBadRequest(description=f"invalid did:web(s) KEL URL {req.path}")
+
+        if aid is None:
+            aid = os.path.basename(os.path.normpath(req.path.rstrip("/did.kel")))
+
+        # 404 if AID not recognized
+        if aid not in self.hby.kevers:
+            raise falcon.HTTPNotFound(description=f"KERI AID {aid} not found")
+
+        result = self.hby.db.kels.getItemIter(keys=(aid,))
+
+        rep.status = falcon.HTTP_200
+        rep.content_type = "application/json"
+        rep.data = json.dumps(result, indent=2).encode("utf-8")
 
 

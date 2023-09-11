@@ -8,6 +8,7 @@ from swagger_ui import api_doc
 from hio.core import http
 
 from dkr.core.webbing import DIDWebResourceEnd
+from dkr.core.webbing import KELWebResourceEnd
 
 """
 DID Webs API Specification
@@ -47,7 +48,7 @@ def add_swagger(app,hby):
                                              "schema":{"type":"string","example":"EBcIURLpxmVwahksgrsGW6_dUw0zBhyEHYFk17eWrZfk"},
                                              "description":"The AID to get the KEL of"}
                                         ],
-                                        "responses":{"200":{"description":"OK","content":{"application/json":{"schema":{"type":"object","example":{
+                                        "responses":{"200":{"description":"OK","content":{"application/cesr+json":{"schema":{"type":"object","example":{
                                             "kel": "this is not a kel yet"
                                         }}}}}}
                                         }},
@@ -68,6 +69,7 @@ def add_swagger(app,hby):
     doc = api_doc(app, config=config, url_prefix='/api/doc', title='API doc for keri-based did:web(s)', editor=True)
     
     app.add_route("/{aid}/did.json", DIDWebResourceEnd(hby=hby))
+    app.add_route("/{aid}/did.kel", KELWebResourceEnd(hby=hby))
 
 class WebsSpecResource:
     """
