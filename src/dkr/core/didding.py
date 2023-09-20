@@ -13,13 +13,13 @@ from multibase import encode as mbencode
 from keri.app import oobiing
 from keri.core import coring
 
-DID_KERI_RE = re.compile('\\Adid:keri:(?P<aid>[^:]+)\\Z', re.IGNORECASE)
-DID_WEBS_RE = re.compile('\\Adid:webs:(?P<domain>[^:]+):((?P<path>.+):)?(?P<aid>[^:]+)\\Z', re.IGNORECASE)
+DID_KERI_RE = re.compile('\\Adid:keri:(?P<aid>[^:]+)(?::(?P<oobi>https?:\/\/[^\/]+\/oobi\/(?P=aid)))?(?P<waid>\/witness\/[^\/]+)?\\Z', re.IGNORECASE)
+DID_WEBS_RE = re.compile('\\Adid:webs:(?P<domain>[^:]+):(?P<aid>[^\/]+)(?P<paths>(?P<path>\/.+)+)\\Z', re.IGNORECASE)
 
 def parseDIDKeri(did):
     match = DID_KERI_RE.match(did)
     if match is None:
-        raise ValueError(f"{did} is not a valid did:webs DID")
+        raise ValueError(f"{did} is not a valid did:keri DID")
 
     aid = match.group("aid")
 
@@ -27,8 +27,11 @@ def parseDIDKeri(did):
         _ = coring.Prefixer(qb64=aid)
     except Exception as e:
         raise ValueError(f"{aid} is an invalid AID")
+    
+    oobi = match.group("oobi")
+    witness = match.group("waid")
 
-    return aid
+    return aid, oobi+witness if witness else oobi
 
 def parseDIDWebs(did):
     match = DID_WEBS_RE.match(did)
@@ -44,7 +47,7 @@ def parseDIDWebs(did):
     except Exception as e:
         raise ValueError(f"{aid} is an invalid AID")
 
-    return domain, path, aid
+    return domain, aid, path
 
 
 def generateDIDDoc(hby, did, aid, oobi=None, metadata=None):

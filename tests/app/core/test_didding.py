@@ -7,13 +7,13 @@ import pytest
 from dkr.core import didding
 
 
-def test_parse_did():
+def test_parse_keri_did():
 
     # Valid did:keri DID
     did = "did:keri:EKW4IEkAZ8VQ_ADXbtRsSOQ_Gk0cRxp6U4qKSr4Eb8zg:http://example.com/oobi" \
           "/EKW4IEkAZ8VQ_ADXbtRsSOQ_Gk0cRxp6U4qKSr4Eb8zg/witness/BIYCp_nGrWF_UR0IDtEFlHGmj_nAx2I3DzbfXxAgc0DC"
 
-    aid, oobi = didding.parseDID(did)
+    aid, oobi = didding.parseDIDKeri(did)
     assert aid == "EKW4IEkAZ8VQ_ADXbtRsSOQ_Gk0cRxp6U4qKSr4Eb8zg"
     assert oobi == "http://example.com/oobi" \
                    "/EKW4IEkAZ8VQ_ADXbtRsSOQ_Gk0cRxp6U4qKSr4Eb8zg/witness/BIYCp_nGrWF_UR0IDtEFlHGmj_nAx2I3DzbfXxAgc0DC"
@@ -23,5 +23,21 @@ def test_parse_did():
           "/EKW4IEkAZ8VQ_ADXbtRsSOQ_Gk0cRxp6U4qKSr4Eb8zg/witness/BIYCp_nGrWF_UR0IDtEFlHGmj_nAx2I3DzbfXxAgc0DC"
 
     with pytest.raises(ValueError):
-        _, _ = didding.parseDID(did)
+        _, _ = didding.parseDIDKeri(did)
+        
+def test_parse_webs_did():
+
+    # Valid did:keri DID
+    did = "did:webs:example.com:EKW4IEkAZ8VQ_ADXbtRsSOQ_Gk0cRxp6U4qKSr4Eb8zg/path/to/file"
+
+    domain, aid, path = didding.parseDIDWebs(did)
+    assert aid == "EKW4IEkAZ8VQ_ADXbtRsSOQ_Gk0cRxp6U4qKSr4Eb8zg"
+    assert domain == "example.com"
+    assert path == "/path/to/file"
+
+    # Invalid AID in did:webs
+    did = "did:webs:example.com:Gk0cRxp6U4qKSr4Eb8zg/path/to/file"
+
+    with pytest.raises(ValueError):
+        _, _, _ = didding.parseDIDWebs(did)
 
